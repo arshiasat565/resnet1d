@@ -16,23 +16,23 @@ def preprocess_physionet():
     """
     
     # read label
-    label_df = pd.read_csv('../data/challenge2017/REFERENCE-v3.csv', header=None)
+    label_df = pd.read_csv(r"C:\Users\Notebook\Downloads\challenge-2017\REFERENCE-v3.csv", header=None)
     label = label_df.iloc[:,1].values
     print(Counter(label))
 
     # read data
     all_data = []
-    filenames = pd.read_csv('../data/challenge2017/training2017/RECORDS', header=None)
+    filenames = pd.read_csv(r"C:\Users\Notebook\Downloads\challenge-2017\training2017\RECORDS", header=None)
     filenames = filenames.iloc[:,0].values
     print(filenames)
     for filename in tqdm(filenames):
-        mat = scipy.io.loadmat('../data/challenge2017/training2017/{0}.mat'.format(filename))
+        mat = scipy.io.loadmat(r"C:\Users\Notebook\Downloads\challenge-2017\training2017\{0}.mat".format(filename))
         mat = np.array(mat['val'])[0]
         all_data.append(mat)
     all_data = np.array(all_data)
 
     res = {'data':all_data, 'label':label}
-    with open('../data/challenge2017/challenge2017.pkl', 'wb') as fout:
+    with open(r"C:\Users\Notebook\Downloads\challenge-2017\challenge2017.pkl", 'wb') as fout:
         pickle.dump(res, fout)
 
 def slide_and_cut(X, Y, window_size, stride, output_pid=False, datatype=4):
@@ -74,7 +74,7 @@ def read_data_physionet_2_clean_federated(m_clients, test_ratio=0.2, window_size
     """
 
     # read pkl
-    with open('../data/challenge2017/challenge2017.pkl', 'rb') as fin:
+    with open(r"C:\Users\Notebook\Downloads\challenge-2017\challenge2017.pkl", 'rb') as fin:
         res = pickle.load(fin)
     ## scale data
     all_data = res['data']
@@ -95,7 +95,8 @@ def read_data_physionet_2_clean_federated(m_clients, test_ratio=0.2, window_size
             all_label.append(0)
             all_data.append(res['data'][i])
     all_label = np.array(all_label)
-    all_data = np.array(all_data)
+    all_data = np.array(all_data, dtype=object)  # Allows arrays of different lengths
+    #all_data = np.array(all_data)
 
     # split into m_clients
     shuffle_pid = np.random.permutation(len(all_label))
@@ -138,7 +139,7 @@ def read_data_physionet_2_clean(window_size=3000, stride=500):
     """
 
     # read pkl
-    with open('../data/challenge2017/challenge2017.pkl', 'rb') as fin:
+    with open(r"C:\Users\Notebook\Downloads\challenge-2017\challenge2017.pkl", 'rb') as fin:
         res = pickle.load(fin)
     ## scale data
     all_data = res['data']
@@ -159,7 +160,9 @@ def read_data_physionet_2_clean(window_size=3000, stride=500):
             all_label.append(0)
             all_data.append(res['data'][i])
     all_label = np.array(all_label)
-    all_data = np.array(all_data)
+    all_data = np.array(all_data, dtype=object)  # Allows arrays of different lengths
+
+    #all_data = np.array(all_data)
 
     # split train test
     X_train, X_test, Y_train, Y_test = train_test_split(all_data, all_label, test_size=0.1, random_state=0)
@@ -185,7 +188,7 @@ def read_data_physionet_2_clean(window_size=3000, stride=500):
 def read_data_physionet_2(window_size=3000, stride=500):
 
     # read pkl
-    with open('../data/challenge2017/challenge2017.pkl', 'rb') as fin:
+    with open(r"C:\Users\Notebook\Downloads\challenge-2017\challenge2017.pkl", 'rb') as fin:
         res = pickle.load(fin)
     ## scale data
     all_data = res['data']
@@ -228,7 +231,7 @@ def read_data_physionet_2(window_size=3000, stride=500):
 def read_data_physionet_4(window_size=3000, stride=500):
 
     # read pkl
-    with open('../data/challenge2017/challenge2017.pkl', 'rb') as fin:
+    with open(r"C:\Users\Notebook\Downloads\challenge-2017\challenge2017.pkl", 'rb') as fin:
         res = pickle.load(fin)
     ## scale data
     all_data = res['data']
@@ -263,8 +266,11 @@ def read_data_physionet_4(window_size=3000, stride=500):
     
     # shuffle train
     shuffle_pid = np.random.permutation(Y_train.shape[0])
-    X_train = X_train[shuffle_pid]
-    Y_train = Y_train[shuffle_pid]
+    X_train = X_train.astype(np.float32)
+    Y_train = Y_train.astype(np.float32)
+
+    #X_train = X_train[shuffle_pid]
+    #Y_train = Y_train[shuffle_pid]
 
     X_train = np.expand_dims(X_train, 1)
     X_test = np.expand_dims(X_test, 1)
@@ -274,7 +280,7 @@ def read_data_physionet_4(window_size=3000, stride=500):
 def read_data_physionet_4_with_val(window_size=3000, stride=500):
 
     # read pkl
-    with open('../data/challenge2017/challenge2017.pkl', 'rb') as fin:
+    with open(r"C:\Users\Notebook\Downloads\challenge-2017\challenge2017.pkl", 'rb') as fin:
         res = pickle.load(fin)
     ## scale data
     all_data = res['data']
@@ -311,8 +317,11 @@ def read_data_physionet_4_with_val(window_size=3000, stride=500):
     
     # shuffle train
     shuffle_pid = np.random.permutation(Y_train.shape[0])
-    X_train = X_train[shuffle_pid]
-    Y_train = Y_train[shuffle_pid]
+    X_train = X_train.astype(np.float32)
+    Y_train = Y_train.astype(np.float32)
+
+    #X_train = X_train[shuffle_pid]
+    #Y_train = Y_train[shuffle_pid]
 
     X_train = np.expand_dims(X_train, 1)
     X_val = np.expand_dims(X_val, 1)

@@ -351,13 +351,15 @@ class Net1D(nn.Module):
 
             out_channels = self.filter_list[i_stage]
             m_blocks = self.m_blocks_list[i_stage]
+            print(f"Stage {i_stage}: out_channels={out_channels}, groups_width={self.groups_width}, computed_groups={out_channels // self.groups_width}")
             tmp_stage = BasicStage(
                 in_channels=in_channels, 
                 out_channels=out_channels, 
                 ratio=self.ratio, 
                 kernel_size=self.kernel_size, 
                 stride=self.stride, 
-                groups=out_channels//self.groups_width, 
+                groups = max(1, out_channels // self.groups_width),
+                #groups=out_channels//self.groups_width, 
                 i_stage=i_stage,
                 m_blocks=m_blocks, 
                 use_bn=self.use_bn, 
@@ -389,3 +391,4 @@ class Net1D(nn.Module):
         out = self.dense(out)
         
         return out
+        

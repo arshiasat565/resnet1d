@@ -49,17 +49,17 @@ if __name__ == "__main__":
         in_channels=1, 
         base_filters=256, 
         ratio=1.0, 
-        filter_mul_list=[1,2,2,4,4,8,8], 
+        filter_list=[1,2,2,4,4,8,8], 
         m_blocks_list=[2,2,2,2,2,2,2], 
         kernel_size=16, 
         stride=2, 
-        groups=32,
+        groups_width=32,
         verbose=True, 
         n_classes=4)
     model.to(device)
 
     summary(model, (X_train.shape[1], X_train.shape[2]), device=device_str)
-    exit()
+    # exit()
 
     # train and test
     model.verbose = False

@@ -21,6 +21,8 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 from tensorboardX import SummaryWriter
 from torchsummaryX import summary
+#from torchsummary import summary
+
 
 if __name__ == "__main__":
 
@@ -52,7 +54,9 @@ if __name__ == "__main__":
         n_classes=2,
         device=device)
     
-    summary(model, torch.zeros(1, 1, 3000))
+    #print("Data passed to summary:", torch.zeros(1, 1, 3000).shape)
+
+    #summary(model, torch.zeros(1, 1, 3000))
 
     model.to(device)
     # train and test

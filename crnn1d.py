@@ -99,7 +99,9 @@ class CRNN(nn.Module):
         out = out.view(-1, self.n_seg, self.out_channels)
         if self.verbose:
             print(out.shape)
+        
         _, (out, _) = self.rnn(out)
+
         out = torch.squeeze(out, dim=0)
         if self.verbose:
             print(out.shape)
